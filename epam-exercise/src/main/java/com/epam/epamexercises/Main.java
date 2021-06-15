@@ -72,6 +72,7 @@ public class Main {
 			public void run() {
 				LoadingCache<MyObject, String> cacheGuava = CacheBuilder.newBuilder()
 		          .expireAfterAccess(5000,TimeUnit.MILLISECONDS)
+		          .maximumSize(100_000)
 		          .build(loader);
 		        
 		        Random random = new Random();
@@ -83,11 +84,8 @@ public class Main {
 					cacheGuava.getUnchecked(object);
 				}
 				
-				try {
-					Thread.sleep(6000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				System.out.println(""+cacheGuava.size());
+				
 			}
 		};
         
@@ -95,7 +93,9 @@ public class Main {
         ExecutorService executerG = Executors.newFixedThreadPool(3);
         executerG.execute(r2);
         executerG.execute(r2);
+        executerG.execute(r2);
 		executer.shutdown();
+		executerG.shutdownNow();
 	}
 
 }
